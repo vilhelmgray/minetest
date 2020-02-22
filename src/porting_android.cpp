@@ -176,7 +176,7 @@ static std::string getAndroidPath(
 	return javaStringToUTF8(js_path);
 }
 
-void initializePathsAndroid()
+void initializePathsAndroid(const std::string &userdata)
 {
 	// Get Environment class
 	jclass cls_Env = jnienv->FindClass("android/os/Environment");
@@ -188,7 +188,10 @@ void initializePathsAndroid()
 	std::string path_storage = getAndroidPath(cls_Env, nullptr,
 				mt_getAbsPath, "getExternalStorageDirectory");
 
-	path_user    = path_storage + DIR_DELIM + PROJECT_NAME_C;
+	if (userdata.empty())
+		path_user = path_storage + DIR_DELIM + PROJECT_NAME_C;
+	else
+		path_user = userdata;
 	path_share   = path_storage + DIR_DELIM + PROJECT_NAME_C;
 	path_cache   = getAndroidPath(nativeActivity,
 			app_global->activity->clazz, mt_getAbsPath, "getCacheDir");
